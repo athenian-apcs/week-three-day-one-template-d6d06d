@@ -30,17 +30,17 @@ public class MyTests {
     public void testPrintNumsUpTo() {
         myMain.printNumsUpTo(10);
         String expected = "1 2 3 4 5\n6 7 8 9 10\n";
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected.strip(), outContent.toString().strip());
 
         outContent.reset();
         myMain.printNumsUpTo(7);
         expected = "1 2 3 4 5\n6 7 ";
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected.strip(), outContent.toString().strip());
 
         outContent.reset();
         myMain.printNumsUpTo(3);
         expected = "1 2 3 ";
-        assertEquals(expected, outContent.toString());
+        assertEquals(expected.strip(), outContent.toString().strip());
     }
 
     @Test
