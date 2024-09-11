@@ -1,60 +1,65 @@
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.File;
-import java.io.FileInputStream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MyTests {
 
-    // Works the same as assertEquals for strings, except multiple correct answers can be provided
-    // The aim is to have a helpful error message be printed out when the assertion fails
-    public static void assertMultipleEquals(String[] expected, String actual, String message) {
-        for (String str: expected) {
-            if (str.equals(actual)) {
-                assertEquals(str, actual, message);
-                return;
-            }
-        }
+    private MyMain myMain;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
 
-        // Currently, it will print out the first expected answer as the "correct" answer
-        // However, the message should illuminate what the correct possibilites are
-        assertEquals(expected[0], actual, message);
-    }
-
-    // Works the same as assertTrue, however, actually calls assertEquals when the condition is false,
-    // so that that the error message is more helpful
-    public static void assertTrueString(boolean condition, String expected, String actual, String message) {
-        if (condition) {
-            assertTrue(condition, message);
-        }
-        else {
-            assertEquals(expected, actual, message);
-        }
+    @BeforeEach
+    public void setUp() {
+        myMain = new MyMain();
+        System.setOut(new PrintStream(outContent));
     }
 
     @Test
-    public void testMainMethodOutput() throws IOException {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            PrintStream originalOut = System.out;
-            System.setOut(new PrintStream(bos));
+    public void testDivisibleByFour() {
+        assertTrue(myMain.divisibleByFour(8), "8 should be divisible by 4");
+        assertTrue(myMain.divisibleByFour(12), "12 should be divisible by 4");
+        assertFalse(myMain.divisibleByFour(10), "10 should not be divisible by 4");
+        assertFalse(myMain.divisibleByFour(15), "15 should not be divisible by 4");
+        assertTrue(myMain.divisibleByFour(0), "0 should be divisible by 4");
+        assertTrue(myMain.divisibleByFour(-16), "-16 should be divisible by 4");
+    }
 
-            // Call main()
-            MyMain.main(null);
-            String output = bos.toString().trim();
+    @Test
+    public void testPrintNumsUpTo() {
+        myMain.printNumsUpTo(10);
+        String expected = "1 2 3 4 5\n6 7 8 9 10\n";
+        assertEquals(expected, outContent.toString());
 
-            // Test 1: Output is not empty
-            assertTrue(output.length() > 0, "The output is empty! You need to print some output!");
+        outContent.reset();
+        myMain.printNumsUpTo(7);
+        expected = "1 2 3 4 5\n6 7\n";
+        assertEquals(expected, outContent.toString());
 
-            // Test 2: Output is at least 10 characters
-            assertTrue(output.length() > 10, "The output is too short. Make sure you're printing enough information.");
+        outContent.reset();
+        myMain.printNumsUpTo(3);
+        expected = "1 2 3\n";
+        assertEquals(expected, outContent.toString());
+    }
 
-            System.setOut(originalOut);
-        }
+    @Test
+    public void testSumDigits() {
+        assertEquals(6, myMain.sumDigits(123), "Sum of digits of 123 should be 6");
+        assertEquals(10, myMain.sumDigits(1234), "Sum of digits of 1234 should be 10");
+        assertEquals(1, myMain.sumDigits(1000), "Sum of digits of 1000 should be 1");
+        assertEquals(0, myMain.sumDigits(0), "Sum of digits of 0 should be 0");
+        assertEquals(9, myMain.sumDigits(900), "Sum of digits of 900 should be 9");
+    }
+
+    @Test
+    public void testIsSelfDivisor() {
+        assertTrue(myMain.isSelfDivisor(128), "128 should be a self divisor");
+        assertTrue(myMain.isSelfDivisor(26), "26 should be a self divisor");
+        assertFalse(myMain.isSelfDivisor(13), "13 should not be a self divisor");
+        assertTrue(myMain.isSelfDivisor(11), "11 should be a self divisor");
+        assertFalse(myMain.isSelfDivisor(120), "120 should not be a self divisor");
+        assertFalse(myMain.isSelfDivisor(10), "10 should not be a self divisor");
     }
 }
 
