@@ -25,7 +25,7 @@ public class MyMain {
         return 0;
     }
 
-    // Bonus: This method returns true if the input num is a "self-divisor",
+    // This method returns true if the input num is a "self-divisor",
     // and false otherwise.
     // A positive integer is called a "self-divisor" if the number is divisible
     // by every one of its digits.
